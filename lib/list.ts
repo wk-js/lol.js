@@ -186,4 +186,30 @@ export class List<T> {
     return arr
   }
 
+  values() {
+    return this[Symbol.iterator]()
+  }
+
+  [Symbol.iterator](): Iterator<T> {
+    let current = this._root.next
+
+    return {
+      next() {
+        if (current) {
+          let value = current.value
+          current = current.next
+          return {
+            done: false,
+            value
+          }
+        }
+
+        return {
+          done: true,
+          value: null
+        }
+      }
+    }
+  }
+
 }

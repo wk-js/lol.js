@@ -1,4 +1,4 @@
-import { iterator } from "../array/iterator"
+import { iterator } from "../array/iterator.ts"
 
 export function word(min = 2, max = 15) {
   const vowels = iterator("aeiouy".split(""), { loop: true, random: true })

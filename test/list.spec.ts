@@ -1,131 +1,110 @@
-import "mocha";
-import * as assert from "assert";
-import { List } from "../lib/list"
-import { toIterator } from "../lib/list/utils"
+import { assertEquals, runIfMain, test } from "https://deno.land/std/testing/mod.ts"
+import { List } from "../lib/list.ts"
 
-describe("List", () => {
+test(function insert_and_count() {
+  const l = new List<string>()
 
-  it('Insert and count', () => {
-    const l = new List<string>()
+  l.push("l")
+  assertEquals(l.length, 1)
 
-    l.push("l")
+  l.unshift("h")
+  assertEquals(l.length, 2)
 
-    assert.equal(l.length, 1)
+  l.insertAt(1, "e")
+  assertEquals(l.length, 3)
 
-    l.unshift("h")
+  l.add("l")
+  assertEquals(l.length, 4)
 
-    assert.equal(l.length, 2)
-
-    l.insertAt(1, "e")
-
-    assert.equal(l.length, 3)
-
-    l.add("l")
-
-    assert.equal(l.length, 4)
-
-    assert.deepEqual(l.toArray(), [ "h", "e", "l", "l" ])
-  })
-
-  it('Remove and count', () => {
-    const l = new List<number>()
-
-    l.push(0)
-    l.push(1)
-    l.push(2)
-    l.push(3)
-    l.push(4)
-
-    assert.equal(l.length, 5)
-
-    l.shift()
-    l.pop()
-
-    assert.equal(l.length, 3)
-
-    l.remove(2)
-    l.removeAt(0)
-
-    assert.equal(l.length, 1)
-
-    l.pop()
-
-    assert.equal(l.length, 0)
-
-    l.pop()
-
-    assert.equal(l.length, 0)
-  })
-
-  it('Insert and Remove', () => {
-    const l = new List<string>()
-
-    l.push("l")
-    l.push("l")
-    l.push("o")
-
-    assert.deepEqual(l.toArray(), [ "l", "l", "o" ])
-
-    l.unshift("h")
-
-    assert.deepEqual(l.toArray(), [ "h", "l", "l", "o" ])
-
-    l.insertAt(1, "e")
-
-    assert.deepEqual(l.toArray(), [ "h", "e", "l", "l", "o" ])
-
-    l.pop()
-
-    assert.deepEqual(l.toArray(), [ "h", "e", "l", "l" ])
-
-    l.shift()
-
-    assert.deepEqual(l.toArray(), [ "e", "l", "l" ])
-
-    l.removeAt(1)
-
-    assert.deepEqual(l.toArray(), [ "e", "l" ])
-  })
-
-  it('IndexOf', () => {
-    const l = new List<string>()
-
-    l.push("l")
-    l.push("l")
-    l.push("o")
-
-    assert.deepEqual(l.indexOf("l"), 0)
-
-    l.unshift("h")
-    l.insertAt(1, "e")
-
-    assert.deepEqual(l.indexOf("l"), 2)
-    assert.deepEqual(l.indexOf("o"), 4)
-  })
-
-  it('Inverse', () => {
-    const l = new List<string>()
-    l.add("h")
-    l.add("e")
-    l.add("l")
-    l.add("l")
-    l.add("o")
-
-    l.inverse()
-    assert.deepEqual(l.toArray(), [ 'o', 'l', 'l', 'e', 'h' ]);
-  })
-
-  it('Iterator', () => {
-    const l = new List("hello".split(''));
-
-    const it = toIterator(l)
-    assert.deepEqual(it.next(), { done: false, value: "h" })
-    assert.deepEqual(it.next(), { done: false, value: "e" })
-    assert.deepEqual(it.next(), { done: false, value: "l" })
-    assert.deepEqual(it.next(), { done: false, value: "l" })
-    assert.deepEqual(it.next(), { done: false, value: "o" })
-    assert.deepEqual(it.next(), { done: true, value: null })
-    assert.deepEqual(it.next(), { done: true, value: null })
-  })
-
+  assertEquals(l.toArray(), ["h", "e", "l", "l"])
 })
+
+test(function remove_and_count() {
+  const l = new List<number>()
+
+  l.push(0)
+  l.push(1)
+  l.push(2)
+  l.push(3)
+  l.push(4)
+  assertEquals(l.length, 5)
+
+  l.shift()
+  l.pop()
+  assertEquals(l.length, 3)
+
+  l.remove(2)
+  l.removeAt(0)
+  assertEquals(l.length, 1)
+
+  l.pop()
+  assertEquals(l.length, 0)
+
+  l.pop()
+  assertEquals(l.length, 0)
+})
+
+test(function insert_and_remove() {
+  const l = new List<string>()
+
+  l.push("l")
+  l.push("l")
+  l.push("o")
+  assertEquals(l.toArray(), ["l", "l", "o"])
+
+  l.unshift("h")
+  assertEquals(l.toArray(), ["h", "l", "l", "o"])
+
+  l.insertAt(1, "e")
+  assertEquals(l.toArray(), ["h", "e", "l", "l", "o"])
+
+  l.pop()
+  assertEquals(l.toArray(), ["h", "e", "l", "l"])
+
+  l.shift()
+  assertEquals(l.toArray(), ["e", "l", "l"])
+
+  l.removeAt(1)
+  assertEquals(l.toArray(), ["e", "l"])
+})
+
+test(function index_of() {
+  const l = new List<string>()
+
+  l.push("l")
+  l.push("l")
+  l.push("o")
+  assertEquals(l.indexOf("l"), 0)
+
+  l.unshift("h")
+  l.insertAt(1, "e")
+  assertEquals(l.indexOf("l"), 2)
+  assertEquals(l.indexOf("o"), 4)
+})
+
+test(function inverse() {
+  const l = new List<string>()
+  l.add("h")
+  l.add("e")
+  l.add("l")
+  l.add("l")
+  l.add("o")
+
+  l.inverse()
+  assertEquals(l.toArray(), ["o", "l", "l", "e", "h"])
+})
+
+test(function iterator() {
+  const l = new List("hello".split(""))
+
+  const it = l.values()
+  assertEquals(it.next(), { done: false, value: "h" })
+  assertEquals(it.next(), { done: false, value: "e" })
+  assertEquals(it.next(), { done: false, value: "l" })
+  assertEquals(it.next(), { done: false, value: "l" })
+  assertEquals(it.next(), { done: false, value: "o" })
+  assertEquals(it.next(), { done: true, value: null })
+  assertEquals(it.next(), { done: true, value: null })
+})
+
+runIfMain(import.meta)

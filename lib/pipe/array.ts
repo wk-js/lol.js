@@ -1,5 +1,5 @@
-import { PipeSync, pipe_sync, PipeAsync, pipe_async } from "./index";
-import { sort, shuffle, inverse, unique, similarity, difference } from "../array/index";
+import { PipeSync, pipe_sync, PipeAsync, pipe_async } from "./index.ts";
+import { sort, shuffle, inverse, unique, similarity, difference } from "../array/index.ts";
 
 export class PipeArray<T> {
 

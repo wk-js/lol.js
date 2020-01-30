@@ -1,48 +1,45 @@
-import "mocha";
-import * as assert from "assert";
-import { pipe_async } from "../lib/pipe";
-import { toUnderscore } from "../lib/string"
+import { assertEquals, runIfMain, test } from "https://deno.land/std/testing/mod.ts"
+import { pipe_async } from "../lib/pipe/index.ts"
+import { toUnderscore } from "../lib/string/index.ts"
 
-describe('Pipe', () => {
+test(async function pipe() {
 
-  it('pipe', async () => {
+  const hello = pipe_async('Hello World')
 
-    const hello = pipe_async('Hello World')
+  assertEquals(
+    await hello
+    .pipe(toUnderscore)
+    .value(),
+    'hello_world'
+  )
 
-    assert.equal(
-      await hello
-      .pipe(toUnderscore)
-      .value(),
-      'hello_world'
-    )
+  assertEquals(
+    await hello
+    .pipe((v) => v.toLowerCase())
+    .value(),
+    'hello world'
+  )
 
-    assert.equal(
-      await hello
-      .pipe((v) => v.toLowerCase())
-      .value(),
-      'hello world'
-    )
-
-    assert.deepEqual(
-      await hello
-      .pipe((v) => v.toLowerCase())
-      .pipe((v) => { return { value: v } })
-      .value(),
-      {
-        value: 'hello world'
-      }
-    )
-
-    function doSomething(s: string, ss: string) {
-      return s.replace(ss, '')
+  assertEquals(
+    await hello
+    .pipe((v) => v.toLowerCase())
+    .pipe((v) => { return { value: v } })
+    .value(),
+    {
+      value: 'hello world'
     }
+  )
 
-    assert.equal(
-      await hello
-      .pipe(doSomething, "World")
-      .value(),
-      'Hello '
-    )
-  })
+  function doSomething(s: string, ss: string) {
+    return s.replace(ss, '')
+  }
 
+  assertEquals(
+    await hello
+    .pipe(doSomething, "World")
+    .value(),
+    'Hello '
+  )
 })
+
+runIfMain(import.meta)
